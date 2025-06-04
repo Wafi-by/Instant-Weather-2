@@ -15,5 +15,5 @@ CSS3
 
 JavaScript (Fetch API pour récupérer les données météo)
 
-🔗 [Lien vers le projet](https://wafi-by.github.io/Instant-Weather-2/)
+🔗 https://wafi-by.github.io/Instant-Weather-2/
 👉 Instant Weather 
