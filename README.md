@@ -9,11 +9,9 @@ Instant Weather est une application web simple qui affiche la météo en temps r
 ⚡ Mise à jour dynamique des données météo grâce à JavaScript
 
 🛠️ Technologies utilisées
-HTML5
-
-CSS3
-
-JavaScript (Fetch API pour récupérer les données météo)
+-HTML
+-CSS
+-JavaScript (Fetch API pour récupérer les données météo)
 
 🔗 https://wafi-by.github.io/Instant-Weather-2/
 👉 Instant Weather 
