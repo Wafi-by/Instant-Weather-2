@@ -1,0 +1,100 @@
+const API_TOKEN = "15c35486407a461b9188290e07de095a687c59695882a5bdfda62c3760e3ebe5";
+const searchBtn = document.getElementById("searchBtn");
+const cityInput = document.getElementById("cityInput");
+const weatherBox = document.getElementById("weather");
+const forecastBox = document.getElementById("forecast");
+const forecastContainer = document.getElementById("forecastContainer");
+
+function getCommuneInfo(query) {
+  const isPostalCode = /^\d{5}$/.test(query);
+  const url = isPostalCode
+    ? `https://geo.api.gouv.fr/communes?codePostal=${query}&fields=nom,code,codesPostaux&format=json&geometry=centre`
+    : `https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,code,codesPostaux&format=json&geometry=centre`;
+
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.length === 0) throw new Error("Commune introuvable");
+      const codeInsee = data[0].code;
+      const cityName = data[0].nom;
+      getWeather(codeInsee, cityName);
+    })
+    .catch((error) => {
+      alert("Erreur : " + error.message);
+    });
+}
+
+function getWeather(codeInsee, cityName) {
+  const url = `https://api.meteo-concept.com/api/forecast/daily?token=${API_TOKEN}&insee=${codeInsee}`;
+
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      displayWeather(data, cityName);
+    })
+    .catch(() => {
+      alert("Impossible de récupérer la météo");
+    });
+}
+
+function displayWeather(data, cityName) {
+  const today = data.forecast[0];
+
+  document.getElementById("cityName").textContent = cityName;
+  document.getElementById("temp").textContent = `Température : ${today.tmin}°C à ${today.tmax}°C`;
+  document.getElementById("description").textContent = `Pluie : ${today.probarain}% | Ensoleillement : ${today.sun_hours}h`;
+  document.getElementById("advice").textContent = giveAdvice((today.tmin + today.tmax) / 2);
+
+  displayForecast(data.forecast);
+  weatherBox.classList.remove("hidden");
+}
+
+function displayForecast(forecastList) {
+  forecastContainer.innerHTML = "";
+
+  forecastList.forEach((day, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() + i);
+    const dayName = date.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
+
+    const card = document.createElement("div");
+    card.className = "forecast-card";
+    card.innerHTML = `
+      <h4>${dayName}</h4>
+      <p>${day.tmin}°C - ${day.tmax}°C</p>
+      <p>Pluie : ${day.probarain}%</p>
+      <p>☀️ ${day.sun_hours}h</p>
+    `;
+    forecastContainer.appendChild(card);
+  });
+
+  forecastBox.classList.remove("hidden");
+}
+
+function giveAdvice(temp) {
+  if (temp > 30) return "💧 Restez hydraté !";
+  if (temp > 20) return "😎 Temps idéal pour sortir !";
+  if (temp > 10) return "🧥 Une petite veste peut suffire.";
+  return "🧣 Habille-toi chaudement !";
+}
+
+searchBtn.addEventListener("click", () => {
+  const query = cityInput.value.trim();
+  if (query) {
+    getCommuneInfo(query);
+  }
+});
+
+cityInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    searchBtn.click();
+  }
+});
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const loader = document.getElementById("loader");
+    loader.style.visibility = "hidden";
+    loader.style.opacity = "0";
+  }, 2000);
+});
