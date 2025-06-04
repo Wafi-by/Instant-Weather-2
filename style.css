@@ -1,0 +1,486 @@
+/* -------------------------------
+   1. Styles globaux et variables
+---------------------------------*/
+
+:root {
+  --color-primary: #4facfe;
+  --color-secondary: #00f2fe;
+  --color-dark-bg: #1e1e1e;
+  --color-dark-text: #f5f5f5;
+  --color-light-bg: #ffffff;
+  --color-light-text: #333333;
+  --breakpoint-mobile: 600px;
+  --breakpoint-small: 400px;
+}
+
+html[data-theme="dark"] {
+  --bg-color: var(--color-dark-bg);
+  --text-color: var(--color-dark-text);
+}
+
+html[data-theme="light"] {
+  --bg-color: var(--color-light-bg);
+  --text-color: var(--color-light-text);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  
+  /* NOUVEAU : background amélioré après chargement */
+  background-image:
+    radial-gradient(circle at 30% 30%, rgba(79, 172, 254, 0.3), transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(0, 242, 254, 0.3), transparent 50%),
+    linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  animation: subtleWaves 30s ease-in-out infinite alternate;
+}
+
+/* Animation très douce pour un effet vague subtil */
+@keyframes subtleWaves {
+  0% {
+    background-position: 0% 50%, 100% 50%, 0% 0%;
+  }
+  100% {
+    background-position: 5% 55%, 95% 45%, 0% 0%;
+  }
+}
+
+/* Conteneur central */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Boutons et champs */
+button,
+input[type="text"],
+input[type="range"],
+input[type="checkbox"],
+.submit-btn {
+  font-family: inherit;
+}
+
+/* Cacher les éléments via .hidden */
+.hidden {
+  display: none !important;
+}
+
+/* -------------------------------
+   2. Écran de chargement animé
+---------------------------------*/
+
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to top, var(--color-primary), var(--color-secondary));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: loadingScreenFadeOut 1s ease-in-out forwards;
+  animation-delay: 3.5s;
+}
+
+.weather-animation {
+  position: relative;
+}
+
+.sun {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, #FFD700, #FFA500);
+  border-radius: 50%;
+  position: relative;
+  animation: sunRise 2s ease-in-out forwards;
+  box-shadow: 0 0 30px rgba(255, 223, 0, 0.8);
+}
+
+.sun-rays .ray {
+  position: absolute;
+  width: 10px;
+  height: 30px;
+  background-color: #FFD700;
+  border-radius: 5px;
+  top: 50%;
+  left: 50%;
+  transform-origin: center bottom;
+  opacity: 0;
+  animation: rayPulse 1.5s ease-in-out infinite alternate;
+}
+
+.sun-rays .ray:nth-child(1) { transform: rotate(0deg) translateY(-60px); animation-delay: 0.2s; }
+.sun-rays .ray:nth-child(2) { transform: rotate(45deg) translateY(-60px); animation-delay: 0.4s; }
+.sun-rays .ray:nth-child(3) { transform: rotate(90deg) translateY(-60px); animation-delay: 0.6s; }
+.sun-rays .ray:nth-child(4) { transform: rotate(135deg) translateY(-60px); animation-delay: 0.8s; }
+.sun-rays .ray:nth-child(5) { transform: rotate(180deg) translateY(-60px); animation-delay: 1.0s; }
+.sun-rays .ray:nth-child(6) { transform: rotate(225deg) translateY(-60px); animation-delay: 1.2s; }
+.sun-rays .ray:nth-child(7) { transform: rotate(270deg) translateY(-60px); animation-delay: 1.4s; }
+.sun-rays .ray:nth-child(8) { transform: rotate(315deg) translateY(-60px); animation-delay: 1.6s; }
+
+/* Bouton “Passer l’intro” */
+#skip-intro {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 10000;
+  animation: fadeInButton 1s ease-in 1.5s forwards;
+}
+
+/* -------------------------------
+   3. Header
+---------------------------------*/
+
+#main-header {
+  background-color: var(--bg-color);
+  padding: 1rem 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container .logo {
+  height: 40px;
+}
+
+#main-header h1 {
+  font-size: 1.5rem;
+}
+
+/* Style du bouton du thème sombre */
+#darkModeToggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+/* -------------------------------
+   4. Formulaire de recherche
+---------------------------------*/
+
+#search-section {
+  margin: 2rem 0;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.input-group input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-bar-wrapper {
+  position: relative;
+}
+
+.search-history-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: var(--bg-color);
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.search-history-dropdown div {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.search-history-dropdown div:hover,
+.search-history-dropdown div:focus {
+  background-color: #f0f0f0;
+}
+
+/* Slider */
+.slider-container {
+  display: flex;
+  align-items: center;
+}
+
+#days-slider {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+/* Checkbox (informations supplémentaires) */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-right: 0.4rem;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.checkbox-item label {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Bouton “Rechercher” */
+.submit-btn {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover,
+.submit-btn:focus {
+  background-color: #3a92d9; /* alternative à darken() */
+  outline: none;
+}
+
+/* -------------------------------
+   5. Section des résultats
+---------------------------------*/
+
+#results-section {
+  margin-bottom: 2rem;
+}
+
+#location-info {
+  margin-bottom: 1rem;
+}
+
+#city-name {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+#coordinates-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.coordinate-item {
+  font-size: 0.95rem;
+}
+
+/* Carte Leaflet */
+#map-container {
+  height: 300px;
+  margin-bottom: 2rem;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Grille des cartes météo */
+.forecast-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* Carte de prévision individuelle */
+.forecast-card {
+  background-color: var(--bg-color);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.forecast-card:hover,
+.forecast-card:focus-within {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.forecast-date {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-transform: capitalize;
+}
+
+.weather-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 0.5rem;
+}
+
+.temperature {
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+}
+
+.weather-description {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.3rem;
+}
+
+.info-label {
+  font-weight: bold;
+  margin-right: 0.3rem;
+}
+
+.info-value {
+  font-size: 0.95rem;
+}
+
+/* Flèche de direction du vent */
+.wind-direction-container {
+  display: inline-flex;
+  align-items: center;
+}
+
+.wind-arrow {
+  margin-left: 0.3rem;
+  font-size: 1rem;
+}
+
+/* -------------------------------
+   6. Section d’erreur
+---------------------------------*/
+
+#error-section {
+  margin: 2rem 0;
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
+  padding: 1rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-message i {
+  color: #721c24;
+  font-size: 1.2rem;
+}
+
+#error-text {
+  font-size: 1rem;
+}
+
+/* -------------------------------
+   7. Footer
+---------------------------------*/
+
+footer {
+  background-color: var(--bg-color);
+  border-top: 1px solid #ccc;
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* -------------------------------
+   8. Animations et media queries
+---------------------------------*/
+@keyframes fadeInButton {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loadingScreenFadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Responsive pour animation de chargement */
+@media (max-width: var(--breakpoint-mobile)) {
+  .sun {
+    width: 80px;
+    height: 80px;
+  }
+  .sun-rays .ray {
+    height: 25px;
+  }
+  .cloud-1,
+  .cloud-2,
+  .cloud-3 {
+    width: 80px;
+    height: 50px;
+  }
+}
+
+/* Responsive pour formulaire */
+@media (max-width: var(--breakpoint-mobile)) {
+  .checkbox-group {
+    flex-direction: column;
+  }
+}
+
+/* Responsive pour résultats */
+@media (max-width: var(--breakpoint-small)) {
+  .forecast-grid {
+    grid-template-columns: 1fr;
+  }
+}
