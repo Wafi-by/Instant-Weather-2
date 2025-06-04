@@ -1,11 +1,14 @@
 🌤 Instant Weather
-Instant Weather est une application qui permet aux utilisateurs d'obtenir des prévisions météorologiques instantanées et précises pour leur localisation. Elle offre une interface intuitive et rapide pour consulter la météo en temps réel.
+Instant Weather est une application web simple qui affiche la météo en temps réel. Elle est construite avec HTML, CSS et JavaScript, et chaque fichier joue un rôle essentiel dans le fonctionnement de l’application.
 
 🔍 Fonctionnalités
-🌍 Consultation rapide de la météo en fonction de la localisation
+🌍 Affichage de la météo selon la localisation
 
-📆 Prévisions sur plusieurs jours
+🎨 Interface utilisateur responsive
 
-🎨 Interface utilisateur moderne et intuitive
+⚡ Mise à jour dynamique des données météo grâce à JavaScript
 
-⚡ Mises à jour en temps réel des conditions météorologiques   
+🛠️ Technologies utilisées
+- HTML5
+- CSS3
+- JavaScript (Fetch API pour récupérer les données météo)
